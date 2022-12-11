@@ -3,6 +3,7 @@ package ru.hogwarts.school.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
@@ -25,9 +26,23 @@ public class FacultyController {
         return ResponseEntity.ok(faculty);
     }
 
-    @GetMapping("/color/{color}") // GET http://localhost:8080/faculty/color/red
-    public ResponseEntity<Collection<Faculty>> getFacultiesByColor(@PathVariable String color) {
+    @GetMapping(value = "/color", params = "color") // GET http://localhost:8080/faculty/color
+    public ResponseEntity<Collection<Faculty>> getFacultiesByColor(@RequestParam(required = false) String color) {
         return ResponseEntity.ok(facultyService.getFacultiesByColor(color));
+    }
+
+    @GetMapping(value = "/color", params = "searchStr") // GET http://localhost:8080/faculty/color
+    public ResponseEntity<Collection<Faculty>> findFacultiesByNameOrColor(@RequestParam(required = false) String searchStr) {
+        Collection<Faculty> faculties = facultyService.findFacultiesByNameOrColor(searchStr);
+        if (faculties == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(faculties);
+    }
+
+    @GetMapping("/students/{id}") // GET http://localhost:8080/faculty/students/5
+    public ResponseEntity<Collection<Student>> getFacultyStudents(@PathVariable Long id) {
+        return ResponseEntity.ok(facultyService.getFacultyStudents(id));
     }
 
     @PostMapping // POST http://localhost:8080/faculty
@@ -37,11 +52,7 @@ public class FacultyController {
 
     @PutMapping // PUT http://localhost:8080/faculty
     public ResponseEntity<Faculty> editFaculty(@RequestBody Faculty faculty) {
-        Faculty foundFaculty = facultyService.editFaculty(faculty);
-        if (foundFaculty == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(foundFaculty);
+        return ResponseEntity.ok(facultyService.editFaculty(faculty));
     }
 
     @DeleteMapping("{id}") // DELETE http://localhost:8080/faculty/2
