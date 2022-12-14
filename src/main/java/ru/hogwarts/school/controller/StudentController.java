@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("student")
@@ -108,5 +109,20 @@ public class StudentController {
             response.setContentLength((int) avatar.getFileSize());
             is.transferTo(os);
         }
+    }
+
+    @GetMapping("/count-of-students")
+    public ResponseEntity <Integer> getCountOfStudents() {
+        return ResponseEntity.ok().body(studentService.getCountOfStudents());
+    }
+
+    @GetMapping("/avg-age")
+    public ResponseEntity <Float> getStudentsAverageAge() {
+        return ResponseEntity.ok().body(studentService.getStudentsAverageAge());
+    }
+
+    @GetMapping("/get-last-five")
+    public ResponseEntity <List<Student>> getLast5Students() {
+        return ResponseEntity.ok().body(studentService.getLast5Students());
     }
 }
