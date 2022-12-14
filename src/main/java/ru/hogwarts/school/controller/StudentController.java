@@ -42,12 +42,12 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
-    @GetMapping("/age") // GET http://localhost:8080/student/age/25
+    @GetMapping("/age") // GET http://localhost:8080/student/age?age25
     public ResponseEntity<Collection<Student>> getStudentsByAge(@RequestParam Integer age) {
         return ResponseEntity.ok(studentService.getStudentsByAge(age));
     }
 
-    @GetMapping // GET http://localhost:8080/student/age
+    @GetMapping // GET http://localhost:8080/student?min=15&max=18
     public ResponseEntity<Collection<Student>> findByAgeBetween(
             @RequestParam Integer min,
             @RequestParam Integer max) {
