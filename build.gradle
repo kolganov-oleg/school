@@ -19,6 +19,7 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.5.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'com.h2database:h2'
+    implementation 'org.liquibase:liquibase-core'
 }
 
 tasks.named('test') {
