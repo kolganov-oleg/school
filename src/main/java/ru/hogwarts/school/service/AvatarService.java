@@ -1,5 +1,7 @@
 package ru.hogwarts.school.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +31,16 @@ public class AvatarService {
 
     private final StudentService studentService;
     private final AvatarRepository avatarRepository;
+    private final Logger logger = LoggerFactory.getLogger(AvatarService.class);
 
     public AvatarService(StudentService studentService, AvatarRepository avatarRepository) {
+        logger.debug("Calling constructor AvatarService");
         this.studentService = studentService;
         this.avatarRepository = avatarRepository;
     }
 
     public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
+        logger.debug("Calling method uploadAvatar (studentId = {})", studentId);
         Student student = studentService.findStudent(studentId);
 
         // Save avatar file to local disk
@@ -62,6 +67,7 @@ public class AvatarService {
     }
 
     public Avatar findStudentAvatar(Long studentId) {
+        logger.debug("Calling method findStudentAvatar (studentId = {})", studentId);
         return avatarRepository.findByStudentId(studentId).orElse(new Avatar());
     }
 
@@ -89,6 +95,7 @@ public class AvatarService {
 
 
     public ResponseEntity<Collection<Avatar>> findByPagination(int page, int size) {
+        logger.debug("Calling method findByPagination (page = {}, size = {})", page, size);
         PageRequest pageRequest = PageRequest.of(page - 1, size);
         Collection<Avatar> avatars = avatarRepository.findAll(pageRequest).getContent();
         if (avatars.isEmpty()) {
