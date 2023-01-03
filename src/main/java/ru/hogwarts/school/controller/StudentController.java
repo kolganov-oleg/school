@@ -135,4 +135,16 @@ public class StudentController {
     public ResponseEntity<List<String>> getStudentsByNameStartsWith(@RequestParam String letter) {
         return ResponseEntity.ok(studentService.getStudentsByNameStartsWith(letter));
     }
+
+    @GetMapping("/print-students-in-threads")
+    public ResponseEntity<String> printStudentsInThread() {
+        studentService.printStudentsInThread();
+        return ResponseEntity.ok("Print student's names to console");
+    }
+
+    @GetMapping("/print-students-in-threads-sync")
+    public ResponseEntity<String> synchronizationPrintStudentsInThread() {
+        studentService.printToConsoleSyncMode();
+        return ResponseEntity.ok("Print student's names to console in sync mode");
+    }
 }

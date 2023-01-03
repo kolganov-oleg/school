@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+
+    private Integer syncCount = 0;
     private final Logger logger = LoggerFactory.getLogger(StudentService.class);
 
     public StudentService(StudentRepository studentRepository) {
@@ -93,5 +95,65 @@ public class StudentService {
                 .mapToDouble(user -> user.getAge())
                 .average()
                 .orElse(Double.NaN);
+    }
+
+    public void printStudentsInThread() {
+        List <Student> students = studentRepository.findAll();
+
+        printToConsole(students.get(0).getName());
+        printToConsole(students.get(1).getName());
+
+        new Thread(() -> {
+            printToConsole(students.get(2).getName());
+            printToConsole(students.get(3).getName());
+        }
+        ).start();
+
+        new Thread(() -> {
+            printToConsole(students.get(4).getName());
+
+        }
+        ).start();
+    }
+
+
+    private void printToConsole(String str) {
+        System.out.println(str);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+    public void printToConsoleSyncMode() {
+        List <Student> students = studentRepository.findAll();
+
+
+        printToConsoleSyncMode(students);
+        printToConsoleSyncMode(students);
+
+        new Thread(()-> {
+            printToConsoleSyncMode(students);
+            printToConsoleSyncMode(students);
+        }
+        ).start();
+
+        new Thread(()-> {
+            printToConsoleSyncMode(students);
+
+        }
+        ).start();
+
+    }
+
+    private void printToConsoleSyncMode(List<Student> students) {
+
+        synchronized (syncCount) {
+            System.out.println(students.get(syncCount).getName());
+            syncCount++;
+        }
     }
 }
