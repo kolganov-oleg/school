@@ -17,6 +17,7 @@ public class StudentService {
     private final StudentRepository studentRepository;
 
     private Integer syncCount = 0;
+    private final Object flag = new Object();
     private final Logger logger = LoggerFactory.getLogger(StudentService.class);
 
     public StudentService(StudentRepository studentRepository) {
@@ -151,7 +152,7 @@ public class StudentService {
 
     private void printToConsoleSyncMode(List<Student> students) {
 
-        synchronized (syncCount) {
+        synchronized (flag) {
             System.out.println(students.get(syncCount).getName());
             syncCount++;
         }
